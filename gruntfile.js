@@ -9,7 +9,9 @@ module.exports = function(grunt) {
 		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
 		clientCSS: ['public/modules/**/*.css'],
 		mochaTests: ['app/tests/**/*.js'],
-		bootstrapLessFiles: ['public/lib/bootstrap/less/**']
+		allLessFiles: ['public/lib/bootstrap/less/*.less', 'public/lib/bootstrap/less/**/*.less', 'public/modules/**/*.less'],
+		bootstrapLessFiles: ['public/lib/bootstrap/less/bootstrap.less'],
+		moduleLessFiles: ['public/modules/**/*.less']
 	};
 
 	// Project Configuration
@@ -43,7 +45,7 @@ module.exports = function(grunt) {
 				}
 			},
 			compileLess:{
-				files: watchFiles.bootstrapLessFiles,
+				files: watchFiles.allLessFiles,
 				tasks: ['less'],
 				options: {
 					livereload: true
@@ -150,7 +152,12 @@ module.exports = function(grunt) {
 		},
 		less:{
 			bootstrap:{
+				paths: [watchFiles.bootstrapLessFiles],
 				files: {'public/lib/bootstrap/dist/css/bootstrap.css' : watchFiles.bootstrapLessFiles}
+			},
+			articles:{
+				paths: [watchFiles.moduleLessFiles],
+				files: {'public/modules/articles/css/articles.css' : watchFiles.moduleLessFiles}
 			}
 		}
 	});
@@ -187,4 +194,7 @@ module.exports = function(grunt) {
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
+
+	//Load less
+	grunt.loadNpmTasks('grunt-contrib-less');
 };
